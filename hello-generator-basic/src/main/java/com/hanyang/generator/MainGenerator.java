@@ -12,7 +12,7 @@ public class MainGenerator {
     public static void main(String[] args) throws TemplateException, IOException {
         MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
         mainTemplateConfig.setAuthor("jiusi");
-        mainTemplateConfig.setLoop(true);
+        mainTemplateConfig.setLoop(false);
         mainTemplateConfig.setOutputText("求和结果：");
         doGenerator(mainTemplateConfig);
     }
@@ -20,18 +20,17 @@ public class MainGenerator {
 
     public static void doGenerator(Object model) throws TemplateException, IOException {
 
-        // 1. 静态文件生成
         String projectPath = System.getProperty("user.dir");
+        // 整个项目的根路径
+        File parentFile = new File(projectPath);
         // 输入路径
-        String inputPath = projectPath + File.separator + "hello-generator-demo-projects" + File.separator + "acm-template";
-        // 输出路径
+        String inputPath = new File(parentFile, "hello-generator-demo-projects/acm-template").getAbsolutePath();
         String outputPath = projectPath;
         // 生成静态文件
         StaticGenerator.copyFilesByRecursive(inputPath, outputPath);
-
-        // 2. 生成动态文件
-        String dynamicInputPath = projectPath + File.separator + "hello-generator-basic" + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
-        String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/hanyang/acm/MainTemplate.java";
-        DynamicGenerator.doGenerator(dynamicInputPath, dynamicOutputPath, model);
+        // 生成动态文件
+        String inputDynamicFilePath = projectPath + File.separator + "hello-generator-basic" + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
+        String outputDynamicFilePath = outputPath + File.separator + "acm-template/src/com/hanyang/acm/MainTemplate.java";
+        DynamicGenerator.doGenerator(inputDynamicFilePath, outputDynamicFilePath, model);
     }
 }
